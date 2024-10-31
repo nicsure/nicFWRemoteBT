@@ -23,13 +23,10 @@ namespace nicFWRemoteBT
 
         private static void Adapter_DeviceDiscovered(object? sender, Plugin.BLE.Abstractions.EventArgs.DeviceEventArgs e)
         {
-            if (MainPage.Instance != null)
-            {
-                MainPage.Instance.Dispatcher.Dispatch(() =>
+            MainPage.Instance?.Dispatcher.Dispatch(() =>
                 {
                     VM.Instance.BTDevices.Add(new(e.Device));
                 });
-            }
         }
 
         public static string ToHexBleAddress(this Guid id)
@@ -74,6 +71,7 @@ namespace nicFWRemoteBT
             }
             catch { }
             incoming.Clear();
+            Display.State = DPState.Idle;
             reader = null;
             writer = null;
             if (showStatus)
@@ -159,19 +157,17 @@ namespace nicFWRemoteBT
         }
     }
 
-    public class BTDevice : IDisposable
+    public class BTDevice(IDevice device) : IDisposable
     {
-        public IDevice Device { get; }
-        public BTDevice(IDevice device)
-        {
-            Device = device;
-        }
+        public IDevice Device { get; } = device;
+
         public override string ToString()
         {
             return $"{Device.Name} {Device.Id.ToHexBleAddress()[^5..]}";
         }
         public void Dispose()
         {
+            GC.SuppressFinalize(this);
             Device.Dispose();
         }
     }

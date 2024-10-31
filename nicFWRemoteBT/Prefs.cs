@@ -11,7 +11,7 @@ namespace nicFWRemoteBT
 
         public static bool Bool(string key)
         {
-            return bool.TryParse(Preferences.Get(key, "False"), out bool b) ? b : false; 
+            return bool.TryParse(Preferences.Get(key, "False"), out bool b) && b; 
         }
 
         public static void Bool(string key, bool val)

@@ -31,7 +31,7 @@ public partial class Settings : ContentPage
 
     private void Settings_Loaded(object? sender, EventArgs e)
     {
-        if(VM.Instance.ReadyBT)
+        if(VM.Instance.ReadyBT && BTDevices.SelectedItem != BT.ConnectedDevice)
         {
             BTDevices.SelectedItem = BT.ConnectedDevice;
         }

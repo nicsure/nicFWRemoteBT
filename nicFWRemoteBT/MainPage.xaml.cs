@@ -93,7 +93,7 @@ namespace nicFWRemoteBT
                 switch(button.Tag)
                 {
                     case "Settings":
-                        if (settingsSingleton == null) settingsSingleton = new();
+                        settingsSingleton ??= new();
                         await Navigation.PushAsync(settingsSingleton);
                         break;
                 }
@@ -104,7 +104,7 @@ namespace nicFWRemoteBT
         {
             if (sender is XButton button) 
             {
-                if (int.TryParse(button.Tag, out int buttonId))
+                if (int.TryParse(button.Tag, out int _))
                 {
                     await Task.Delay(250);
                     await BT.SendByte(0xff);

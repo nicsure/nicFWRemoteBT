@@ -33,10 +33,10 @@ namespace nicFWRemoteBT
     public class Display : SKCanvasView
     {
         private readonly SKBitmap bitmap = new(512, 512, true);
-        private DPState state = DPState.Idle;
+        public static DPState State { get; set; } = DPState.Idle;
         private int x, y, col1, col2, width, height, font, sigMode, sigLev;
         private string text = string.Empty;
-        private SKTypeface typeface = GetMonospaced("Consolas", "monospaced", "Menlo", "Courier");
+        private readonly SKTypeface typeface = GetMonospaced("Consolas", "monospaced", "Menlo", "Courier");
         private bool displayUpdate = false;
 
         private static readonly SKRect bmRect = new(0, 0, 512, 512);
@@ -114,17 +114,15 @@ namespace nicFWRemoteBT
             SKRect rect = new(x, y, x + width, y + height);
             using (SKCanvas canvas = new(bitmap))
             {
-                using (SKPaint paint = new())
-                {
-                    paint.Color = FwColor();
-                    paint.Style = SKPaintStyle.Fill;
-                    canvas.DrawRect(rect, paint);
-                }
+                using SKPaint paint = new();
+                paint.Color = FwColor();
+                paint.Style = SKPaintStyle.Fill;
+                canvas.DrawRect(rect, paint);
             }
             displayUpdate = true;
         }
 
-        private int FontSize(int fontNumber)
+        private static int FontSize(int fontNumber)
         {
             return fontNumber switch
             {
@@ -138,62 +136,60 @@ namespace nicFWRemoteBT
         {
             using (SKCanvas canvas = new(bitmap))
             {
-                using (SKPaint paint = new())
+                using SKPaint paint = new();
+                int fw = font == 0 ? 24 : font == 1 ? 32 : 48;
+                int fh = font < 2 ? 32 : 64;
+                var col = FwColor();
+                paint.Typeface = typeface;
+                paint.TextSize = Display.FontSize(font);
+                paint.TextAlign = SKTextAlign.Left;
+                paint.Style = SKPaintStyle.Fill;
+                paint.IsAntialias = true;
+                foreach (char ch in text)
                 {
-                    int fw = font == 0 ? 24 : font == 1 ? 32 : 48;
-                    int fh = font == 2 ? 64 : 32;
-                    var col = FwColor();
-                    paint.Typeface = typeface;
-                    paint.TextSize = FontSize(font);
-                    paint.TextAlign = SKTextAlign.Left;
-                    paint.Style = SKPaintStyle.Fill;
-                    paint.IsAntialias = true;
-                    foreach (char ch in text)
+                    string? c = null;
+                    switch (ch)
                     {
-                        string? c = null;
-                        switch (ch)
-                        {
-                            case '^':
-                                SpecialCharacter(upArrow, x, y, col);
-                                break;
-                            case '_':
-                                SpecialCharacter(downArrow, x, y, col);
-                                break;
-                            case '!':
-                                SpecialCharacter(AB, x, y, col);
-                                break;
-                            case '$':
-                                SpecialCharacter(stopHand, x, y, col);
-                                break;
-                            case '&':
-                                SpecialCharacter(musicNote, x, y, col);
-                                break;
-                            case '{':
-                                SpecialCharacter(speechBubble, x, y, col);
-                                break;
-                            case '~':
-                                SpecialCharacter(scanSymbol, x, y, col);
-                                break;
-                            case '}':
-                                SpecialCharacter(keySymbol, x, y, col);
-                                break;
-                            case '@':
-                                c = " ";
-                                break;
-                            default:
-                                c = ch.ToString();
-                                break;
-                        }
-                        if (c != null)
-                        {
-                            var textBox = new SKRect(x, y, x + fw, y + fh);
-                            paint.Color = SKColors.Black;
-                            canvas.DrawRect(textBox, paint);
-                            paint.Color = col;
-                            canvas.DrawText(c, x, y + fh - 1, paint);
-                        }
-                        x += fw;
+                        case '^':
+                            SpecialCharacter(upArrow, x, y, col);
+                            break;
+                        case '_':
+                            SpecialCharacter(downArrow, x, y, col);
+                            break;
+                        case '!':
+                            SpecialCharacter(AB, x, y, col);
+                            break;
+                        case '$':
+                            SpecialCharacter(stopHand, x, y, col);
+                            break;
+                        case '&':
+                            SpecialCharacter(musicNote, x, y, col);
+                            break;
+                        case '{':
+                            SpecialCharacter(speechBubble, x, y, col);
+                            break;
+                        case '~':
+                            SpecialCharacter(scanSymbol, x, y, col);
+                            break;
+                        case '}':
+                            SpecialCharacter(keySymbol, x, y, col);
+                            break;
+                        case '@':
+                            c = " ";
+                            break;
+                        default:
+                            c = ch.ToString();
+                            break;
                     }
+                    if (c != null)
+                    {
+                        var textBox = new SKRect(x, y, x + fw, y + fh);
+                        paint.Color = SKColors.Black;
+                        canvas.DrawRect(textBox, paint);
+                        paint.Color = col;
+                        canvas.DrawText(c, x, y + fh - 1, paint);
+                    }
+                    x += fw;
                 }
             }
             displayUpdate = true;
@@ -203,16 +199,14 @@ namespace nicFWRemoteBT
         {
             using (SKCanvas canvas = new(bitmap))
             {
-                using (SKPaint paint = new())
-                {
-                    paint.Color = SKColors.Black;
-                    paint.Style = SKPaintStyle.Fill;
-                    paint.IsAntialias = true;
-                    canvas.DrawRect(noiseRect, paint);
-                    paint.Color = sigMode == 1 ? SKColors.LimeGreen : SKColors.Blue;
-                    SKRect rect = new(18, 26, (sigLev * 4) + 18, 34);
-                    canvas.DrawRect(rect, paint);
-                }
+                using SKPaint paint = new();
+                paint.Color = SKColors.Black;
+                paint.Style = SKPaintStyle.Fill;
+                paint.IsAntialias = true;
+                canvas.DrawRect(noiseRect, paint);
+                paint.Color = sigMode == 1 ? SKColors.LimeGreen : SKColors.Blue;
+                SKRect rect = new(18, 26, (sigLev * 4) + 18, 34);
+                canvas.DrawRect(rect, paint);
             }
             displayUpdate = true;
         }
@@ -222,38 +216,36 @@ namespace nicFWRemoteBT
         {
             using (SKCanvas canvas = new(bitmap))
             {
-                using (SKPaint paint = new())
+                using SKPaint paint = new();
+                paint.Color = SKColors.Black;
+                paint.Style = SKPaintStyle.Fill;
+                paint.IsAntialias = true;
+                canvas.DrawRect(signalRect, paint);
+                for (int i = 0; i < sigLev & i <= 120; i += 2)
                 {
-                    paint.Color = SKColors.Black;
-                    paint.Style = SKPaintStyle.Fill;
-                    paint.IsAntialias = true;
-                    canvas.DrawRect(signalRect, paint);
-                    for (int i = 0; i < sigLev & i <= 120; i+=2)
+                    switch (sigMode)
                     {
-                        switch(sigMode)
-                        {
-                            case 0:
-                                if (i < 60)
-                                    paint.Color = SKColors.LimeGreen;
-                                else if (i < 90)
-                                    paint.Color = SKColors.Yellow;
-                                else
-                                    paint.Color = SKColors.Orange;
-                                break;
-                            case 1:
-                                paint.Color = SKColors.Orange;
-                                break;
-                            case 2:
-                                paint.Color = SKColors.DeepSkyBlue;
-                                break;
-                            case 3:
+                        case 0:
+                            if (i < 60)
                                 paint.Color = SKColors.LimeGreen;
-                                break;
-                        }
-                        int h = (i * 4) + 18;
-                        signalBar.Location = new(h, 0);
-                        canvas.DrawRect(signalBar, paint);
+                            else if (i < 90)
+                                paint.Color = SKColors.Yellow;
+                            else
+                                paint.Color = SKColors.Orange;
+                            break;
+                        case 1:
+                            paint.Color = SKColors.Orange;
+                            break;
+                        case 2:
+                            paint.Color = SKColors.DeepSkyBlue;
+                            break;
+                        case 3:
+                            paint.Color = SKColors.LimeGreen;
+                            break;
                     }
+                    int h = (i * 4) + 18;
+                    signalBar.Location = new(h, 0);
+                    canvas.DrawRect(signalBar, paint);
                 }
             }
             displayUpdate = true;
@@ -261,7 +253,7 @@ namespace nicFWRemoteBT
 
         private void ProcessByte(int byt)
         {
-            switch(state)
+            switch(State)
             {
                 case DPState.Idle:
                     switch(byt)
@@ -296,44 +288,44 @@ namespace nicFWRemoteBT
                             break;
                         case 0x77: // draw text
                             text = string.Empty;
-                            state = DPState.TextCoordX;
+                            State = DPState.TextCoordX;
                             break;
                         case 0x78: // draw rect
-                            state = DPState.FillCoordX;
+                            State = DPState.FillCoordX;
                             break;
                         case 0x79: // s-meter/power meter
-                            state = DPState.SignalMode;
+                            State = DPState.SignalMode;
                             break;
                         case 0x7a: // noise meter/tx modulation
-                            state = DPState.NoiseLevel;
+                            State = DPState.NoiseLevel;
                             break;
                     }
                     break;
                 case DPState.TextCoordX:
                     x = byt << 2;
-                    state = DPState.TextCoordY;
+                    State = DPState.TextCoordY;
                     break;
                 case DPState.TextCoordY:
                     y = byt << 2;
-                    state = DPState.FontSize;
+                    State = DPState.FontSize;
                     break;
                 case DPState.FontSize:
                     font = byt;
-                    state = DPState.TextCol1;
+                    State = DPState.TextCol1;
                     break;
                 case DPState.TextCol1:
                     col1 = byt;
-                    state = DPState.TextCol2;
+                    State = DPState.TextCol2;
                     break;
                 case DPState.TextCol2:
                     col2 = byt;
-                    state = DPState.Text;
+                    State = DPState.Text;
                     break;
                 case DPState.Text:
                     if (byt == 0)
                     {
                         DrawText();
-                        state = DPState.Idle;
+                        State = DPState.Idle;
                     }
                     else
                         text += (char)byt;
@@ -341,44 +333,44 @@ namespace nicFWRemoteBT
 
                 case DPState.FillCoordX:
                     x = byt << 2;
-                    state = DPState.FillCoordY;
+                    State = DPState.FillCoordY;
                     break;
                 case DPState.FillCoordY:
                     y = byt << 2;
-                    state = DPState.FillWidth;
+                    State = DPState.FillWidth;
                     break;
                 case DPState.FillWidth:
                     width = byt << 2;
-                    state = DPState.FillHeight;
+                    State = DPState.FillHeight;
                     break;
                 case DPState.FillHeight:
                     height = byt << 2;
-                    state = DPState.FillCol1;
+                    State = DPState.FillCol1;
                     break;
                 case DPState.FillCol1:
                     col1 = byt;
-                    state = DPState.FillCol2;
+                    State = DPState.FillCol2;
                     break;
                 case DPState.FillCol2:
                     col2 = byt;
-                    state = DPState.Idle;
+                    State = DPState.Idle;
                     DrawRect();
                     break;
 
                 case DPState.SignalMode:
                     sigMode = byt;
-                    state = DPState.SignalLevel;
+                    State = DPState.SignalLevel;
                     break;
                 case DPState.SignalLevel:
                     sigLev = byt;
-                    state = DPState.Idle;
+                    State = DPState.Idle;
                     DrawSignal();
                     break;
 
                 case DPState.NoiseLevel:
                     sigLev = byt;
                     if (sigLev == 255) sigLev = 0;
-                    state = DPState.Idle;
+                    State = DPState.Idle;
                     DrawNoise();
                     break;
             }
