@@ -5,7 +5,7 @@
              xmlns:local="clr-namespace:nicFWRemoteBT" 
              x:DataType="local:VM"
              BackgroundColor="Black"
-             Title="Settings">
+             Title="H3 Remote Settings">
     <ContentPage.Resources>
         <Style TargetType="Frame">
             <Setter Property="BackgroundColor" Value="#404040"/>
