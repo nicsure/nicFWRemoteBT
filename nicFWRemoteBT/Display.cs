@@ -102,10 +102,20 @@ namespace nicFWRemoteBT
         {
             // c1 = GGGRRRRR
             // c2 = BBBBBGGG
+            int r = (col1 & 0b00011111) << 3;
+            int g = ((col2 & 0b00000111) << 5) | ((col1 & 0b11100000) >> 3);
+            int b = col2 & 0b11111000;
+            if(VM.Instance.BlueBoost)
+            {
+                int bb = b >> 1;
+                g = (g + bb).Clamp(0, 255);
+                bb >>= 1;
+                r = (r + bb).Clamp(0, 255);
+            }
             return new(
-                    (byte)((col1 & 0b00011111) << 3),
-                    (byte)(((col2 & 0b00000111) << 5) | ((col1 & 0b11100000) >> 3)),
-                    (byte)(col2 & 0b11111000)
+                    (byte)r,
+                    (byte)g,
+                    (byte)b
                 );
         }
 

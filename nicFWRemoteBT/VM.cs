@@ -91,6 +91,19 @@ namespace nicFWRemoteBT
             }
         }
 
+        public bool BlueBoost
+        {
+            get => Prefs.Bool(nameof(BlueBoost));
+            set
+            {
+                if (Prefs.Bool(nameof(BlueBoost)) != value)
+                {
+                    Prefs.Bool(nameof(BlueBoost), value);
+                    OnPropertyChanged(nameof(BlueBoost));
+                }
+            }
+        }
+
         public bool ConnectOnStart
         {
             get => Prefs.Bool(nameof(ConnectOnStart));
@@ -243,6 +256,8 @@ namespace nicFWRemoteBT
         public Color LedLeftColor => LedColor(ledGreenLeft, ledRedLeft);
 
         public Color LedRightColor => LedColor(ledGreenRight, ledRedRight);
+
+
 
         public string ForceUpdate
         {

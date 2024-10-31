@@ -85,6 +85,13 @@
                 </VerticalStackLayout>
             </Frame>
 
+            <Frame>
+                <VerticalStackLayout>
+                    <Label Text="Blue Boost"/>
+                    <CheckBox IsChecked="{Binding BlueBoost}" />
+                    <Label Text="Increases brightness of blue display elements."/>
+                </VerticalStackLayout>
+            </Frame>
 
         </VerticalStackLayout>
     </ScrollView>
