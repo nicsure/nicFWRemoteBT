@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:nicFWRemoteBT"   
+             Padding="0,0,0,0"
+             x:DataType="local:VM"
+             x:Class="nicFWRemoteBT.MainPage">
+    <Frame BackgroundColor="Black" Padding="0,0,0,0">
+        <Grid x:Name="MainGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="LeftColumn" Width="1*"/>
+                <ColumnDefinition x:Name="RightColumn" Width="0"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition x:Name="TopRow" Height="1*"/>
+                <RowDefinition x:Name="BottomRow" Height="1*"/>
+            </Grid.RowDefinitions>
+        </Grid>
+    </Frame>
+</ContentPage>

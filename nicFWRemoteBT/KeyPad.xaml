@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:nicFWRemoteBT"
+             BackgroundColor="Black"
+             x:DataType="local:VM"
+             x:Class="nicFWRemoteBT.KeyPad">
+    <ContentView.Resources>
+        <Style TargetType="local:XButton">
+            <Setter Property="Margin" Value="5,5,5,5"/>
+            <Setter Property="TextColor" Value="White"/>
+        </Style>
+    </ContentView.Resources>
+    <Frame BackgroundColor="Black" Padding="0,0,0,0">
+        <Grid x:Name="KeyGrid">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+                <ColumnDefinition Width="1*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+                <RowDefinition Height="1*"/>
+            </Grid.RowDefinitions>
+            <local:XButton Tag="16" Grid.Column="0" Grid.Row="0" Grid.RowSpan="2" Text="📡" BackgroundColor="DarkSlateGray" />
+            <local:XButton Tag="17" Grid.Column="0" Grid.Row="2" Text="📡" BackgroundColor="DarkSlateGray"/>
+            <local:XButton Tag="18" Grid.Column="0" Grid.Row="3" Text="🔦" BackgroundColor="DarkSlateGray"/>
+
+            <local:XButton Tag="10" Grid.Column="1" Grid.Row="0" Text="☰" BackgroundColor="DarkBlue"/>
+            <local:XButton Tag="1" Grid.Column="2" Grid.Row="0" Text="1" />
+            <local:XButton Tag="2" Grid.Column="3" Grid.Row="0" Text="2" />
+            <local:XButton Tag="3" Grid.Column="4" Grid.Row="0" Text="3" />
+            <local:XButton Tag="14" Grid.Column="5" Grid.Row="0" Text="*" />
+
+            <local:XButton Tag="11" Grid.Column="1" Grid.Row="1" Text="▲" BackgroundColor="DarkGreen"/>
+            <local:XButton Tag="4" Grid.Column="2" Grid.Row="1" Text="4" />
+            <local:XButton Tag="5" Grid.Column="3" Grid.Row="1" Text="5" />
+            <local:XButton Tag="6" Grid.Column="4" Grid.Row="1" Text="6" />
+            <local:XButton Tag="0" Grid.Column="5" Grid.Row="1" Text="0" />
+
+            <local:XButton Tag="12" Grid.Column="1" Grid.Row="2" Text="▼" BackgroundColor="DarkGreen"/>
+            <local:XButton Tag="7" Grid.Column="2" Grid.Row="2" Text="7" />
+            <local:XButton Tag="8" Grid.Column="3" Grid.Row="2" Text="8" />
+            <local:XButton Tag="9" Grid.Column="4" Grid.Row="2" Text="9" />
+            <local:XButton Tag="15" Grid.Column="5" Grid.Row="2" Text="#" />
+
+            <local:XButton Tag="13" Grid.Column="1" Grid.Row="3" Text="⨂" BackgroundColor="DarkRed"/>
+
+            <Grid Grid.Column="2" Grid.Row="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Rectangle Grid.Column="1" Grid.Row="1" Fill="#505050"/>
+                <Rectangle Margin="1,1,1,1" Grid.Column="1" Grid.Row="1" Fill="{Binding LedLeftColor}"/>
+            </Grid>
+
+            <Grid Grid.Column="3" Grid.Row="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                    <RowDefinition Height="1*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="1*"/>
+                </Grid.ColumnDefinitions>
+                <Rectangle Grid.Column="1" Grid.Row="1" Fill="#505050"/>
+                <Rectangle Margin="1,1,1,1" Grid.Column="1" Grid.Row="1" Fill="{Binding LedRightColor}"/>
+            </Grid>
+
+
+            <ActivityIndicator Grid.Column="4" Grid.Row="3" IsRunning="{Binding BusyBT}"/>
+            <local:XButton Tag="Settings" Grid.Column="5" Grid.Row="3" Text="⚙️" BackgroundColor="DarkViolet"/>
+
+        </Grid>
+    </Frame>
+</ContentView>

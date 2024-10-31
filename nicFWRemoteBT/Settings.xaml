@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="nicFWRemoteBT.Settings"
+             xmlns:local="clr-namespace:nicFWRemoteBT" 
+             x:DataType="local:VM"
+             BackgroundColor="Black"
+             Title="Settings">
+    <ContentPage.Resources>
+        <Style TargetType="Frame">
+            <Setter Property="BackgroundColor" Value="#404040"/>
+            <Setter Property="Margin" Value="5,5,5,5"/>
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="TextColor" Value="White"/>
+        </Style>
+        <Style TargetType="Picker">
+            <Setter Property="TextColor" Value="White"/>
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="TextColor" Value="White"/>
+            <Setter Property="BackgroundColor" Value="Blue"/>
+        </Style>
+    </ContentPage.Resources>
+    <ScrollView>
+        <VerticalStackLayout>
+            <Frame>
+                <VerticalStackLayout>
+                    <Label Text="Initial Display Orientation"/>
+                    <Picker SelectedIndexChanged="InitialOrientation_SelectedIndexChanged" x:Name="InitialOrientation" SelectedIndex="{Binding Orientation}">
+                        <Picker.Items>
+                            <x:String>Portrait</x:String>
+                            <x:String>Landscape</x:String>
+                            <x:String>Reverse Portrait</x:String>
+                            <x:String>Reverse Landscape</x:String>
+                        </Picker.Items>
+                    </Picker>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame>
+                <VerticalStackLayout>
+                    <Label Text="Allow Device Orientation Change"/>
+                    <CheckBox IsChecked="{Binding AllowOrientation}" />
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame>
+                <VerticalStackLayout>
+                    <Label Text="Auto-Connect On Startup"/>
+                    <CheckBox IsChecked="{Binding ConnectOnStart}"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame>
+                <VerticalStackLayout IsEnabled="{Binding ScanBT}">
+                    <Button IsEnabled="{Binding NotBusyBT}" Text="Bluetooth Scan" Clicked="ScanButton_Clicked"/>
+                    <ActivityIndicator IsRunning="{Binding BusyBT}"/>
+                    <Label Text="{Binding BTStatus}"/>
+                    <Picker IsEnabled="{Binding NotBusyBT}" SelectedIndexChanged="BTDevices_SelectedIndexChanged" Title="Select Device" x:Name="BTDevices" ItemsSource="{Binding BTDevices}"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame>
+                <VerticalStackLayout>
+                    <Label Text="Small Font Size"/>
+                    <Slider Value="{Binding FontSize0}" Minimum="10" Maximum="100"/>
+                    <Label Text="{Binding FontSize0}"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame>
+                <VerticalStackLayout>
+                    <Label Text="Medium Font Size"/>
+                    <Slider Value="{Binding FontSize1}" Minimum="10" Maximum="100"/>
+                    <Label Text="{Binding FontSize1}"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame>
+                <VerticalStackLayout>
+                    <Label Text="Large Font Size"/>
+                    <Slider Value="{Binding FontSize2}" Minimum="10" Maximum="100"/>
+                    <Label Text="{Binding FontSize2}"/>
+                </VerticalStackLayout>
+            </Frame>
+
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
