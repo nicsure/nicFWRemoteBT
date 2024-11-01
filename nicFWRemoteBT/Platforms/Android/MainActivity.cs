@@ -69,17 +69,15 @@ namespace nicFWRemoteBT
 
     public class MyOrientationEventListener : OrientationEventListener
     {
-        private readonly Context? context = null;        
-
-        public MyOrientationEventListener(Context? context) : base(context) { this.context = context; }
+        public MyOrientationEventListener(Context? context) : base(context) {  }
         public MyOrientationEventListener(nint javaReference, JniHandleOwnership transfer) : base(javaReference, transfer) { }
-        public MyOrientationEventListener(Context? context, [GeneratedEnum] SensorDelay rate) : base(context, rate) { this.context = context; }
+        public MyOrientationEventListener(Context? context, [GeneratedEnum] SensorDelay rate) : base(context, rate) { }
 
         public int OrientationCode { get; set; } = -1;
 
         public override void OnOrientationChanged(int orientation)
         {
-            if (VM.Instance.AllowOrientation && context is Activity act && OrientationCode != -1)
+            if (VM.Instance.AllowOrientation && OrientationCode != -1)
             {
                 int oCode;
                 if (orientation > 45 && orientation <= 135)
