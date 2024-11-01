@@ -53,7 +53,7 @@ namespace nicFWRemoteBT
 
         public static async Task Disconnect(BTDevice? device, bool showStatus = true)
         {
-            await SendByte(0x4b);
+            await SendByte(0x4b); // stop remote command
             ConnectedDevice = null;
             if(showStatus)
                 VM.Instance.BTStatus = $"Disconnecting...";
@@ -125,7 +125,7 @@ namespace nicFWRemoteBT
                                 reader.ValueUpdated -= Reader_ValueUpdated;
                                 reader.ValueUpdated += Reader_ValueUpdated;
                                 await reader.StartUpdatesAsync();
-                                await SendByte(0x4a);
+                                await SendByte(0x4a); // start remote command
                                 return;
                             }
                         }
