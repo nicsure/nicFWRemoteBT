@@ -14,7 +14,8 @@ namespace nicFWRemoteBT
         private readonly static IAdapter adapter = CrossBluetoothLE.Current.Adapter;
         private static ICharacteristic? reader = null, writer = null;
         public static BTDevice? ConnectedDevice { get; private set; } = null;
-        private readonly static Queue<byte> incoming = [];
+        public static IByteProcessor? DataTarget { get; set; } = null;
+        public static IDispatcher? Dispatcher { get; set; } = null;
 
         static BT()
         {
@@ -23,7 +24,7 @@ namespace nicFWRemoteBT
 
         private static void Adapter_DeviceDiscovered(object? sender, Plugin.BLE.Abstractions.EventArgs.DeviceEventArgs e)
         {
-            MainPage.Instance?.Dispatcher.Dispatch(() =>
+            Dispatcher?.Dispatch(() =>
                 {
                     VM.Instance.BTDevices.Add(new(e.Device));
                 });
@@ -70,7 +71,6 @@ namespace nicFWRemoteBT
                     await adapter.DisconnectDeviceAsync(device.Device);
             }
             catch { }
-            incoming.Clear();
             Display.State = DPState.Idle;
             reader = null;
             writer = null;
@@ -79,27 +79,18 @@ namespace nicFWRemoteBT
             VM.Instance.BusyBT = false;
         }
 
-        public static async Task<int> GetByteAsync()
+        public static async Task SendByte(int byt)
         {
-            while(true)
-            {
-                lock(incoming)
-                {
-                    if (incoming.Count > 0)
-                        return incoming.Dequeue();
-                }
-                using var task = Task.Delay(20);
-                await task;
-            }
+            await Write([(byte)byt]);
         }
 
-        public static async Task SendByte(int b)
+        public static async Task Write(byte[] bytes)
         {
             if (writer != null)
             {
                 try
                 {
-                    await writer.WriteAsync([(byte)b]);
+                    await writer.WriteAsync(bytes);
                 }
                 catch { }
             }
@@ -149,10 +140,15 @@ namespace nicFWRemoteBT
 
         private static void Reader_ValueUpdated(object? sender, Plugin.BLE.Abstractions.EventArgs.CharacteristicUpdatedEventArgs e)
         {
-            lock (incoming)
+            if (DataTarget != null)
             {
-                foreach (byte b in e.Characteristic.Value)
-                    incoming.Enqueue(b);
+                Dispatcher?.Dispatch(() =>
+                {
+                    foreach (byte b in e.Characteristic.Value)
+                    {
+                        DataTarget.ProcessByte(b);
+                    }
+                });
             }
         }
     }

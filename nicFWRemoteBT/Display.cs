@@ -30,7 +30,7 @@ namespace nicFWRemoteBT
         NoiseLevel
     }
 
-    public class Display : SKCanvasView
+    public class Display : SKCanvasView, IByteProcessor
     {
         private readonly SKBitmap bitmap = new(512, 512, true);
         public static DPState State { get; set; } = DPState.Idle;
@@ -55,8 +55,9 @@ namespace nicFWRemoteBT
         public Display() : base()
         {
             bitmap.Erase(SKColors.Black);
-            _ = ReceiveDataLoop();
             _ = UpdateDisplayLoop();
+            BT.DataTarget = this;
+            BT.Dispatcher = Dispatcher;
         }
 
         private static SKTypeface GetMonospaced(params string[] tfOptions)
@@ -261,7 +262,7 @@ namespace nicFWRemoteBT
             displayUpdate = true;
         }
 
-        private void ProcessByte(int byt)
+        public void ProcessByte(int byt)
         {
             switch(State)
             {
@@ -400,15 +401,5 @@ namespace nicFWRemoteBT
             }
         }
 
-        private async Task ReceiveDataLoop()
-        {
-            while(true)
-            {
-                int byt = await BT.GetByteAsync();
-                if (byt == -1)
-                    return;
-                ProcessByte(byt);
-            }
-        }
     }
 }
