@@ -142,9 +142,11 @@ namespace nicFWRemoteBT
         {
             if (DataTarget != null)
             {
+                byte[] temp = new byte[e.Characteristic.Value.Length];
+                Array.Copy(e.Characteristic.Value, 0, temp, 0, temp.Length);
                 Dispatcher?.Dispatch(() =>
                 {
-                    foreach (byte b in e.Characteristic.Value)
+                    foreach (byte b in temp)
                     {
                         DataTarget.ProcessByte(b);
                     }

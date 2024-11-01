@@ -396,7 +396,7 @@ namespace nicFWRemoteBT
                     try { InvalidateSurface(); } catch { }
                     displayUpdate = false;
                 }
-                using var task = Task.Delay(100);
+                using var task = Task.Delay(50);
                 await task;
             }
         }
