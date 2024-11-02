@@ -21,6 +21,9 @@
             <Setter Property="TextColor" Value="White"/>
             <Setter Property="BackgroundColor" Value="Blue"/>
         </Style>
+        <Style TargetType="Entry">
+            <Setter Property="TextColor" Value="White"/>
+        </Style>
     </ContentPage.Resources>
     <ScrollView IsEnabled="{Binding RemoteNotEnabled}" Margin="5,0,0,0">
         <VerticalStackLayout IsEnabled="{Binding NotBusyBT}">

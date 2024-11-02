@@ -26,7 +26,7 @@ namespace nicFWRemoteBT
         }
 
 #pragma warning disable CA1822 // Mark members as static (Intellisense is a dick head)
-        public string Version => "V1.1.0";
+        public string Version => "V1.1.1";
 #pragma warning restore CA1822 // Mark members as static
 
         public int FontSize0
