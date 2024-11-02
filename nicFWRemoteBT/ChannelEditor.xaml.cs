@@ -64,18 +64,22 @@ public partial class ChannelEditor : ContentPage, IByteProcessor
 
     private async void ChannelNum_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if(VM.Instance.PendingEdit)
+        if (VM.Instance.PendingEdit)
         {
             if (currentChannel > -1 && await DisplayAlert("Alert!", "Channel changes are unsaved", "Save Now", "Discard"))
             {
                 await SaveChannel();
-                await Task.Delay(500);
+                int to = 100;
+                while (VM.Instance.BusyBT && to-- > 0)
+                {
+                    await Task.Delay(20);
+                }
             }
             VM.Instance.PendingEdit = false;
         }
         VM.Instance.BusyBT = true;
         currentChannel = ChannelNum.SelectedIndex;
-        await BT.Write([0x30, (byte)(currentChannel + 2)]);        
+        await BT.Write([0x30, (byte)(currentChannel + 2)]); // request eeprom read      
     }
 
     private void ChannelDown_Clicked(object sender, EventArgs e)
@@ -110,11 +114,17 @@ public partial class ChannelEditor : ContentPage, IByteProcessor
             if (picker.SelectedIndex > 0)
             {
                 if (sender == RxCTS || sender == RxDCS)
+                {
                     RXTone.Text = picker.SelectedItem.ToString();
+                    Value_Changed(RXTone, e);
+                }
                 else
                 if (sender == TxCTS || sender == TxDCS)
+                {
                     TXTone.Text = picker.SelectedItem.ToString();
-                picker.SelectedIndex = 0;                
+                    Value_Changed(TXTone, e);
+                }
+                picker.SelectedIndex = 0;    
             }
         }         
     }
@@ -291,6 +301,9 @@ public partial class ChannelEditor : ContentPage, IByteProcessor
                         blockCS = 0;
                         State = CPState.ReadEeprom;
                         break;
+                    case 0x31: // ack block write
+                        VM.Instance.BusyBT = false;
+                        break;
                 }
                 break;
             case CPState.ReadEeprom:
@@ -320,9 +333,8 @@ public partial class ChannelEditor : ContentPage, IByteProcessor
         foreach (byte b in data) cs += b;
         if (currentChannel > -1)
         {
-            await BT.Write([0x31, (byte)(currentChannel + 2), .. data, cs]);
-        }
-        VM.Instance.BusyBT = false;
+            await BT.Write([0x31, (byte)(currentChannel + 2), .. data, cs]); // eeprom write
+        }        
     }
 
     private async void SaveButton_Clicked(object sender, EventArgs e)

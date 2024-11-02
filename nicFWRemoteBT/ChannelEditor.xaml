@@ -23,16 +23,16 @@
         </Style>
     </ContentPage.Resources>
     <ScrollView IsEnabled="{Binding RemoteNotEnabled}" Margin="5,0,0,0">
-        <VerticalStackLayout IsEnabled="{Binding NotBusyBT}">
+        <VerticalStackLayout>
             <HorizontalStackLayout>
                 <Label Text="Channel Number" VerticalTextAlignment="Center" WidthRequest="150"/>
                 <Picker x:Name="ChannelNum" SelectedIndex="{Binding SelectedChannel, Mode=OneWayToSource}" SelectedIndexChanged="ChannelNum_SelectedIndexChanged" />
                 <Button x:Name="ChannelDown" Text="-" Margin="10,0,0,0" Clicked="ChannelDown_Clicked"/>
                 <Button x:Name="ChannelUp" Text="+" Margin="10,0,0,0" Clicked="ChannelUp_Clicked"/>
             </HorizontalStackLayout>
-            <HorizontalStackLayout IsEnabled="{Binding ValidSelectedChannel}">
+            <HorizontalStackLayout>
                 <Label Text="Active" VerticalTextAlignment="Center" WidthRequest="150"/>
-                <CheckBox x:Name="Active" CheckedChanged="Value_Changed"/>
+                <CheckBox x:Name="Active" IsEnabled="{Binding ValidSelectedChannel}" CheckedChanged="Value_Changed"/>
             </HorizontalStackLayout>
             <HorizontalStackLayout IsVisible="{Binding Source={x:Reference Active}, Path=IsChecked}">
                 <Label Text="Name" VerticalTextAlignment="Center" WidthRequest="150"/>
@@ -104,7 +104,7 @@
             </HorizontalStackLayout>
             <HorizontalStackLayout Margin="0,10,0,0">
                 <Button WidthRequest="150" x:Name="SaveButton" IsVisible="{Binding PendingEdit}" Text="Save" Clicked="SaveButton_Clicked"/>
-                <Button WidthRequest="150" x:Name="CancelButton" IsVisible="{Binding PendingEdit}" Text="Cancel" Clicked="CancelButton_Clicked"/>
+                <Button Margin="10,0,0,0" WidthRequest="150" x:Name="CancelButton" IsVisible="{Binding PendingEdit}" Text="Cancel" Clicked="CancelButton_Clicked"/>
             </HorizontalStackLayout>
         </VerticalStackLayout>
     </ScrollView>
