@@ -30,16 +30,13 @@ namespace nicFWRemoteBT
                 });
         }
 
-        public static string ToHexBleAddress(this Guid id)
-        {
-            return id.ToString("N")[20..].ToUpperInvariant();
-        }
+
 
         public static async Task Scan()
         {
             await Disconnect(ConnectedDevice);
             foreach (var device in VM.Instance.BTDevices)
-                device.Dispose();
+                device.Dispose();            
             VM.Instance.BTDevices.Clear();
             VM.Instance.BTStatus = $"Scanning...";
             VM.Instance.BusyBT = true;

@@ -13,5 +13,9 @@ namespace nicFWRemoteBT
 
         public static int Clamp(this int i, int min, int max)
             => i < min ? min : i > max ? max : i;
+
+        public static string ToHexBleAddress(this Guid id)
+            => id.ToString("N")[20..].ToUpperInvariant();
+        
     }
 }

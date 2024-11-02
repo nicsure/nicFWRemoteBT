@@ -1,4 +1,5 @@
 ﻿
+
 using SkiaSharp;
 using SkiaSharp.Views.Maui;
 using SkiaSharp.Views.Maui.Controls;
@@ -51,6 +52,7 @@ namespace nicFWRemoteBT
         private static readonly ushort[] speechBubble = [0, 2016, 16380, 32766, 32766, 32766, 32766, 16380, 2016, 960, 480, 112, 24, 4, 0, 0];
         private static readonly ushort[] scanSymbol = [0, 3136, 7360, 14816, 29680, 25080, 24796, 24654, 29190, 15110, 8070, 4046, 1948, 824, 560, 0];
         private static readonly ushort[] keySymbol = [0, 0, 0, 0, 56, 124, 32750, 32710, 27886, 27772, 56, 0, 0, 0, 0, 0];
+        private static readonly SKColor sigDim = new(0x30, 0x30, 0x30);
 
         public Display() : base()
         {
@@ -216,7 +218,7 @@ namespace nicFWRemoteBT
                 paint.IsAntialias = true;
                 canvas.DrawRect(noiseRect, paint);
                 paint.Color = sigMode == 1 ? SKColors.LimeGreen : SKColors.Blue;
-                SKRect rect = new(18, 26, (sigLev * 4) + 18, 34);
+                SKRect rect = new(16, 26, (sigLev * 4) + 16, 34);
                 canvas.DrawRect(rect, paint);
             }
             displayUpdate = true;
@@ -232,8 +234,13 @@ namespace nicFWRemoteBT
                 paint.Style = SKPaintStyle.Fill;
                 paint.IsAntialias = true;
                 canvas.DrawRect(signalRect, paint);
-                for (int i = 0; i < sigLev & i <= 120; i += 2)
+                for (int i = 0; i <= 120; i += 2)
                 {
+                    if (i > sigLev)
+                    {
+                        paint.Color = sigDim;
+                    }
+                    else
                     switch (sigMode)
                     {
                         case 0:
@@ -254,7 +261,7 @@ namespace nicFWRemoteBT
                             paint.Color = SKColors.LimeGreen;
                             break;
                     }
-                    int h = (i * 4) + 18;
+                    int h = (i * 4) + 16;
                     signalBar.Location = new(h, 0);
                     canvas.DrawRect(signalBar, paint);
                 }
