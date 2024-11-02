@@ -93,6 +93,12 @@
                 </VerticalStackLayout>
             </Frame>
 
+            <Frame>
+                <VerticalStackLayout>
+                    <Button Text="Channel Editor" IsEnabled="{Binding AllBT}" Clicked="ChanEditButton_Clicked"/>
+                </VerticalStackLayout>
+            </Frame>            
+            
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

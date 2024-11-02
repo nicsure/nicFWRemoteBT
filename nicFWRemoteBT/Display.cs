@@ -277,8 +277,10 @@ namespace nicFWRemoteBT
                     switch(byt)
                     {
                         case 0x4a: // remote mode ACK
+                            VM.Instance.RemoteIsEnabled = true;
                             break;
                         case 0x4b: // end remote mode ACK
+                            VM.Instance.RemoteIsEnabled = false;
                             break;
                         case 0x60: // left green led off
                             VM.Instance.LedGreenLeft = false;

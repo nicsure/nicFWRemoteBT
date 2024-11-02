@@ -3,11 +3,12 @@ namespace nicFWRemoteBT;
 public partial class Settings : ContentPage
 {
     private bool isLoaded = false;
+    private static ChannelEditor? chanEditSingleton = null;
 
 	public Settings()
 	{
-        Loaded += Settings_Loaded;
         BindingContext = VM.Instance;
+        Loaded += Settings_Loaded;        
         InitializeComponent();    
         VM.Instance.UpdateNotify += Instance_UpdateNotify;        
 	}
@@ -61,5 +62,11 @@ public partial class Settings : ContentPage
         {
             PlatformManager.SetOrientation(InitialOrientation.SelectedIndex);
         }
+    }
+
+    private void ChanEditButton_Clicked(object sender, EventArgs e)
+    {
+        chanEditSingleton ??= new();
+        Navigation.PushAsync(chanEditSingleton);
     }
 }

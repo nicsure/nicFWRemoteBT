@@ -184,6 +184,22 @@ namespace nicFWRemoteBT
         public bool AllBT => availBT && readyBT && !busyBT;
         public bool ScanBT => availBT && !busyBT;
 
+
+        public bool RemoteIsEnabled
+        {
+            get => remoteIsEnabled;
+            set
+            {
+                if (remoteIsEnabled != (remoteIsEnabled = value))
+                {
+                    OnPropertyChanged(nameof(RemoteIsEnabled));
+                    OnPropertyChanged(nameof(RemoteNotEnabled));
+                }
+            }
+        }
+        public bool RemoteNotEnabled => !remoteIsEnabled;
+        private bool remoteIsEnabled = false;
+
         public ObservableCollection<BTDevice> BTDevices { get; } = [];
 
         public bool LedGreenLeft
@@ -257,7 +273,32 @@ namespace nicFWRemoteBT
 
         public Color LedRightColor => LedColor(ledGreenRight, ledRedRight);
 
+        public int SelectedChannel
+        {
+            get => selectedChannel;
+            set
+            {
+                selectedChannel = value;
+                OnPropertyChanged(nameof(SelectedChannel));
+                OnPropertyChanged(nameof(ValidSelectedChannel));
+            }
+        }
+        private int selectedChannel = -1;
 
+        public bool ValidSelectedChannel => selectedChannel > -1 && selectedChannel <= 198;
+
+        public bool PendingEdit
+        { 
+            get => pendingEdit;
+            set
+            {
+                pendingEdit = value;
+                OnPropertyChanged(nameof(PendingEdit));
+                OnPropertyChanged(nameof(NoPendingEdit));
+            }
+        }
+        public bool NoPendingEdit => !pendingEdit;
+        private bool pendingEdit = false;
 
         public string ForceUpdate
         {
