@@ -49,7 +49,8 @@ public partial class ChannelEditor : ContentPage, IByteProcessor
 
     private async void ChannelEditor_Loaded(object? sender, EventArgs e)
     {
-        oldProcessor = BT.DataTarget;
+        if(BT.DataTarget != this)
+            oldProcessor = BT.DataTarget;
         await BT.SendByte(0x4b); // disable remote
         BT.DataTarget = this;
     }
@@ -66,7 +67,7 @@ public partial class ChannelEditor : ContentPage, IByteProcessor
     {
         if (VM.Instance.PendingEdit)
         {
-            if (currentChannel > -1 && await DisplayAlert("Alert!", "Channel changes are unsaved", "Save Now", "Discard"))
+            if (currentChannel > -1 && await DisplayAlert("Alert!", $"Channel {currentChannel + 1} changes are unsaved", "Save Now", "Discard"))
             {
                 await SaveChannel();
                 int to = 100;
@@ -86,7 +87,6 @@ public partial class ChannelEditor : ContentPage, IByteProcessor
     {
         int i = ChannelNum.SelectedIndex - 1;
         if (i < 0) i = 197;
-        suppressUpdate = true;
         ChannelNum.SelectedIndex = i;
     }
 
@@ -94,7 +94,6 @@ public partial class ChannelEditor : ContentPage, IByteProcessor
     {
         int i = ChannelNum.SelectedIndex + 1;
         if (i > 197) i = 0;
-        suppressUpdate = true;
         ChannelNum.SelectedIndex = i;
     }
 
@@ -102,8 +101,10 @@ public partial class ChannelEditor : ContentPage, IByteProcessor
     {
         if(!suppressUpdate)
         {
+            byte[] cmp = data.Copy();
             UpdateToData(sender == RXFreq);
-            VM.Instance.PendingEdit = true;
+            if(!VM.Instance.PendingEdit && !data.IsEqual(cmp))
+                VM.Instance.PendingEdit = true;
         }
     }
 
@@ -238,6 +239,7 @@ public partial class ChannelEditor : ContentPage, IByteProcessor
         string bw = (data[15] & 1) == 0 ? "Wide" : "Narrow";
         string name = Encoding.ASCII.GetString(data, 20, 12).Trim('\0');
         suppressUpdate = true;
+
         Active.IsChecked = rx >= 18 && rx <= 1300;
         RXFreq.Text = rx.ToString("F5");
         TXFreq.Text = tx.ToString("F5");
@@ -248,6 +250,7 @@ public partial class ChannelEditor : ContentPage, IByteProcessor
         Modulation.SelectedItem = modul;
         Bandwidth.SelectedItem = bw;
         Name.Text = name;
+
         suppressUpdate = false;
     }
 

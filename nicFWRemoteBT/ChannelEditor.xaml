@@ -23,7 +23,7 @@
         </Style>
     </ContentPage.Resources>
     <ScrollView IsEnabled="{Binding RemoteNotEnabled}" Margin="5,0,0,0">
-        <VerticalStackLayout>
+        <VerticalStackLayout IsEnabled="{Binding NotBusyBT}">
             <HorizontalStackLayout>
                 <Label Text="Channel Number" VerticalTextAlignment="Center" WidthRequest="150"/>
                 <Picker x:Name="ChannelNum" SelectedIndex="{Binding SelectedChannel, Mode=OneWayToSource}" SelectedIndexChanged="ChannelNum_SelectedIndexChanged" />
@@ -32,7 +32,7 @@
             </HorizontalStackLayout>
             <HorizontalStackLayout>
                 <Label Text="Active" VerticalTextAlignment="Center" WidthRequest="150"/>
-                <CheckBox x:Name="Active" IsEnabled="{Binding ValidSelectedChannel}" CheckedChanged="Value_Changed"/>
+                <CheckBox x:Name="Active" IsVisible="{Binding ValidSelectedChannel}" CheckedChanged="Value_Changed"/>
             </HorizontalStackLayout>
             <HorizontalStackLayout IsVisible="{Binding Source={x:Reference Active}, Path=IsChecked}">
                 <Label Text="Name" VerticalTextAlignment="Center" WidthRequest="150"/>

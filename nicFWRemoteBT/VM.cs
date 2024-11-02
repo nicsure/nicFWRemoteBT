@@ -283,9 +283,9 @@ namespace nicFWRemoteBT
                 OnPropertyChanged(nameof(ValidSelectedChannel));
             }
         }
+        public bool ValidSelectedChannel => selectedChannel > -1 && selectedChannel < 198;
         private int selectedChannel = -1;
 
-        public bool ValidSelectedChannel => selectedChannel > -1 && selectedChannel <= 198;
 
         public bool PendingEdit
         { 
