@@ -97,8 +97,15 @@
                 <VerticalStackLayout>
                     <Button Text="Channel Editor" IsEnabled="{Binding AllBT}" Clicked="ChanEditButton_Clicked"/>
                 </VerticalStackLayout>
-            </Frame>            
-            
+            </Frame>
+
+            <Frame>
+                <VerticalStackLayout>
+                    <Label Text="By Marcus 'nicsure' Dudley - 2024"/>
+                    <Label Text="{Binding Version}"/>
+                </VerticalStackLayout>
+            </Frame>
+
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>

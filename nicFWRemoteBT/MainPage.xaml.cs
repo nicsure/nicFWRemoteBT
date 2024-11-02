@@ -7,6 +7,8 @@ namespace nicFWRemoteBT
         private readonly Display display = new();
         private readonly KeyPad keyPad = new();
 
+        public static IByteProcessor Display => Instance!.display;
+
         public static MainPage? Instance { get; private set; } = null;
 
         public MainPage()

@@ -8,7 +8,6 @@ namespace nicFWRemoteBT;
 
 public partial class ChannelEditor : ContentPage, IByteProcessor
 {
-    private IByteProcessor? oldProcessor = null;
     private int blockCnt = 0;
     private byte blockCS = 0;
     private int currentChannel = -1;
@@ -49,15 +48,13 @@ public partial class ChannelEditor : ContentPage, IByteProcessor
 
     private async void ChannelEditor_Loaded(object? sender, EventArgs e)
     {
-        if(BT.DataTarget != this)
-            oldProcessor = BT.DataTarget;
         await BT.SendByte(0x4b); // disable remote
         BT.DataTarget = this;
     }
 
     protected override bool OnBackButtonPressed()
     {
-        BT.DataTarget = oldProcessor;
+        BT.DataTarget = MainPage.Display;
         _ = BT.SendByte(0x4a); // enable remote
         _ = Navigation.PopAsync();
         return true;

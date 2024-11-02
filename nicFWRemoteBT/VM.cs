@@ -25,6 +25,10 @@ namespace nicFWRemoteBT
             (_ = UpdateNotify)?.Invoke(propertyName, EventArgs.Empty);
         }
 
+#pragma warning disable CA1822 // Mark members as static (Intellisense is a dick head)
+        public string Version => "V1.1.0";
+#pragma warning restore CA1822 // Mark members as static
+
         public int FontSize0
         {
             get => Prefs.Int(nameof(FontSize0)).IfZero(24);
