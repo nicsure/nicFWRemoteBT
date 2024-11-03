@@ -167,7 +167,7 @@ public partial class ChannelEditor : ContentPage, IByteProcessor
         else
         if (double.TryParse(sts, out double d))
         {
-            return d <= 300 ? (int)Math.Round(d * 10) : 0;
+            return d > 0 && d <= 300 ? (int)Math.Round(d * 10) : 0;
         }
         else
             return 0;
