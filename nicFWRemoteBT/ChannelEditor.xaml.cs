@@ -96,11 +96,13 @@ public partial class ChannelEditor : ContentPage, IByteProcessor
 
     private void Value_Changed(object sender, EventArgs e)
     {
-        if(!suppressUpdate)
+        if (!suppressUpdate)
         {
-            byte[] cmp = (byte[])data.Clone();
+            byte[] cmp = [];
+            if (!VM.Instance.PendingEdit)
+                cmp = (byte[])data.Clone();
             UpdateToData(sender == RXFreq);
-            if(!VM.Instance.PendingEdit && !data.SequenceEqual(cmp))
+            if (cmp.Length > 0 && !data.SequenceEqual(cmp))
                 VM.Instance.PendingEdit = true;
         }
     }
