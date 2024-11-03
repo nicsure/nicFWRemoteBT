@@ -98,9 +98,9 @@ public partial class ChannelEditor : ContentPage, IByteProcessor
     {
         if(!suppressUpdate)
         {
-            byte[] cmp = data.Copy();
+            byte[] cmp = (byte[])data.Clone();
             UpdateToData(sender == RXFreq);
-            if(!VM.Instance.PendingEdit && !data.IsEqual(cmp))
+            if(!VM.Instance.PendingEdit && !data.SequenceEqual(cmp))
                 VM.Instance.PendingEdit = true;
         }
     }

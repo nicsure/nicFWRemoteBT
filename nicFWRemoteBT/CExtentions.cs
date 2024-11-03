@@ -16,24 +16,6 @@ namespace nicFWRemoteBT
 
         public static string ToHexBleAddress(this Guid id)
             => id.ToString("N")[20..].ToUpperInvariant();
-
-        public static byte[] Copy(this byte[] src)
-        {
-            byte[] dest = new byte[src.Length];
-            Array.Copy(src, 0, dest, 0, src.Length);
-            return dest;
-        }
-
-        public static bool IsEqual(this byte[] a, byte[] b)
-        {
-            if(a.Length != b.Length) return false;
-            for(int i=0; i<a.Length; i++)
-            {
-                if(a[i] != b[i])
-                    return false;
-            }
-            return true;
-        }
         
     }
 }
