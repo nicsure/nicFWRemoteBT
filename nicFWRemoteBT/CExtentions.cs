@@ -16,6 +16,9 @@ namespace nicFWRemoteBT
 
         public static string ToHexBleAddress(this Guid id)
             => id.ToString("N")[20..].ToUpperInvariant();
+
+        public static string IfNullOrEmpty(this string str, string def)
+            => string.IsNullOrEmpty(str) ? def : str;
         
     }
 }

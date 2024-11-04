@@ -9,5 +9,7 @@ namespace nicFWRemoteBT
     public interface IByteProcessor
     {
         void ProcessByte(int byt);
+
+        bool IsIdle { get; }
     }
 }

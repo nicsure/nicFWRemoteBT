@@ -21,12 +21,18 @@
             <Setter Property="TextColor" Value="White"/>
             <Setter Property="BackgroundColor" Value="Blue"/>
         </Style>
+        <Style TargetType="Slider">
+            <Setter Property="ScaleY" Value="3"/>
+            <Setter Property="ThumbColor" Value="Cyan"/>
+            <Setter Property="MaximumTrackColor" Value="White"/>
+            <Setter Property="MinimumTrackColor" Value="White"/>
+        </Style>
     </ContentPage.Resources>
     <ScrollView>
         <VerticalStackLayout>
             <Frame>
                 <VerticalStackLayout>
-                    <Label Text="Initial Display Orientation"/>
+                    <Label FontAttributes="Bold" Text="Initial Display Orientation"/>
                     <Picker SelectedIndexChanged="InitialOrientation_SelectedIndexChanged" x:Name="InitialOrientation" SelectedIndex="{Binding Orientation}">
                         <Picker.Items>
                             <x:String>Portrait</x:String>
@@ -40,56 +46,67 @@
 
             <Frame>
                 <VerticalStackLayout>
-                    <Label Text="Allow Device Orientation Change"/>
+                    <Label FontAttributes="Bold" Text="Allow Device Orientation Change"/>
                     <CheckBox IsChecked="{Binding AllowOrientation}" />
                 </VerticalStackLayout>
             </Frame>
 
             <Frame>
                 <VerticalStackLayout>
-                    <Label Text="Auto-Connect On Startup"/>
+                    <Label FontAttributes="Bold" Text="Auto-Connect On Startup"/>
                     <CheckBox IsChecked="{Binding ConnectOnStart}"/>
                 </VerticalStackLayout>
             </Frame>
 
             <Frame>
                 <VerticalStackLayout IsEnabled="{Binding ScanBT}">
-                    <Button IsEnabled="{Binding NotBusyBT}" Text="Bluetooth Scan" Clicked="ScanButton_Clicked"/>
-                    <ActivityIndicator IsRunning="{Binding BusyBT}"/>
-                    <Label Text="{Binding BTStatus}"/>
+                    <Label Margin="0,0,0,10" FontAttributes="Bold" Text="Bluetooth"/>
+                    <Button Margin="0,0,0,5" IsEnabled="{Binding NotBusyBT}" Text="Scan" Clicked="ScanButton_Clicked"/>
+                    <Button Margin="0,0,0,5" x:Name="DisconnectButton" Text="Disconnect" IsEnabled="{Binding ReadyBT}" Clicked="DisconnectButton_Clicked"/>
+                    <Label TextColor="Yellow" Text="{Binding BTStatus}"/>
                     <Picker IsEnabled="{Binding NotBusyBT}" SelectedIndexChanged="BTDevices_SelectedIndexChanged" Title="Select Device" x:Name="BTDevices" ItemsSource="{Binding BTDevices}"/>
+                    <ActivityIndicator IsRunning="{Binding BusyBT}"/>
                 </VerticalStackLayout>
             </Frame>
 
             <Frame>
                 <VerticalStackLayout>
-                    <Label Text="Small Font Size"/>
+                    <Label Margin="0,0,0,10" FontAttributes="Bold" Text="Small Font Size"/>
                     <Slider Value="{Binding FontSize0}" Minimum="10" Maximum="100"/>
-                    <Label Text="{Binding FontSize0}"/>
+                    <Label TextColor="Yellow" Text="{Binding FontSize0}"/>
                 </VerticalStackLayout>
             </Frame>
 
             <Frame>
                 <VerticalStackLayout>
-                    <Label Text="Medium Font Size"/>
+                    <Label Margin="0,0,0,10" FontAttributes="Bold" Text="Medium Font Size"/>
                     <Slider Value="{Binding FontSize1}" Minimum="10" Maximum="100"/>
-                    <Label Text="{Binding FontSize1}"/>
+                    <Label TextColor="Yellow" Text="{Binding FontSize1}"/>
                 </VerticalStackLayout>
             </Frame>
 
             <Frame>
                 <VerticalStackLayout>
-                    <Label Text="Large Font Size"/>
+                    <Label Margin="0,0,0,10" FontAttributes="Bold" Text="Large Font Size"/>
                     <Slider Value="{Binding FontSize2}" Minimum="10" Maximum="100"/>
-                    <Label Text="{Binding FontSize2}"/>
+                    <Label TextColor="Yellow" Text="{Binding FontSize2}"/>
                 </VerticalStackLayout>
             </Frame>
 
             <Frame>
                 <VerticalStackLayout>
-                    <Label Text="Blue Boost"/>
+                    <Label Margin="0,0,0,10" FontAttributes="Bold" Text="Custom TTF Font"/>
+                    <Button Margin="0,0,0,5" x:Name="FindFontButton" Text="Select" Clicked="FindFontButton_Clicked"/>
+                    <Button Margin="0,0,0,5" x:Name="ClearFontButton" Text="Clear" Clicked="ClearFontButton_Clicked"/>
+                    <Label TextColor="Yellow" Text="{Binding CustomFontName}"/>
+                </VerticalStackLayout>
+            </Frame>
+
+            <Frame>
+                <VerticalStackLayout>
+                    <Label FontAttributes="Bold" Text="Blue Boost"/>
                     <CheckBox IsChecked="{Binding BlueBoost}" />
-                    <Label Text="Increases brightness of blue display elements."/>
+                    <Label FontAttributes="Italic" TextColor="Gray" Text="Increases brightness of blue display elements."/>
                 </VerticalStackLayout>
             </Frame>
 
@@ -101,8 +118,8 @@
 
             <Frame>
                 <VerticalStackLayout>
-                    <Label Text="By Marcus 'nicsure' Dudley - 2024"/>
-                    <Label Text="{Binding Version}"/>
+                    <Label FontAttributes="Bold" Text="By Marcus 'nicsure' Dudley - 2024"/>
+                    <Label TextColor="Yellow" Text="{Binding Version}"/>
                 </VerticalStackLayout>
             </Frame>
 

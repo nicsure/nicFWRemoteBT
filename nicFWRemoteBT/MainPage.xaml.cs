@@ -57,22 +57,26 @@ namespace nicFWRemoteBT
             {
                 var locationStatus = await Permissions.CheckStatusAsync<Permissions.LocationWhenInUse>();
                 var bluetoothStatus = await Permissions.CheckStatusAsync<Permissions.Bluetooth>();
+                var storageStatus = await Permissions.CheckStatusAsync<Permissions.StorageRead>();
                 if (locationStatus != PermissionStatus.Granted)
                 {
-                    locationStatus = await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
+                    await Permissions.RequestAsync<Permissions.LocationWhenInUse>();
                 }
-
+                if(storageStatus != PermissionStatus.Granted)
+                {
+                    await Permissions.RequestAsync<Permissions.StorageRead>();
+                }
                 if (bluetoothStatus != PermissionStatus.Granted)
                 {
                     bluetoothStatus = await Permissions.RequestAsync<Permissions.Bluetooth>();
                 }
-                if (locationStatus == PermissionStatus.Granted && bluetoothStatus == PermissionStatus.Granted)
+                if (bluetoothStatus == PermissionStatus.Granted)
                 {
                     VM.Instance.AvailBT = true;
                 }
                 else
                 {
-                    await DisplayAlert("Permissions Required", "Location and Bluetooth permissions are required for this app.", "OK");
+                    await DisplayAlert("Permissions Required", "Bluetooth permissions are required for this app.", "OK");
                 }
             }
             else

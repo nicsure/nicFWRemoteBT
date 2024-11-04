@@ -5,13 +5,22 @@ public partial class Settings : ContentPage
     private bool isLoaded = false;
     private static ChannelEditor? chanEditSingleton = null;
 
-	public Settings()
+    private static readonly FilePickerFileType customTtfFileType = new(new Dictionary<DevicePlatform, IEnumerable<string>>
+    {
+        { DevicePlatform.Android, ["application/x-font-ttf", "application/x-font", "font/ttf"] },
+        { DevicePlatform.iOS, [ "public.truetype-ttf-font" ] },
+        { DevicePlatform.WinUI,[ ".ttf" ] },
+        { DevicePlatform.MacCatalyst, [ "ttf" ] }
+    });
+
+    public Settings()
 	{
         BindingContext = VM.Instance;
         Loaded += Settings_Loaded;        
         InitializeComponent();    
-        VM.Instance.UpdateNotify += Instance_UpdateNotify;        
-	}
+        VM.Instance.UpdateNotify += Instance_UpdateNotify;
+        VM.Instance.CustomFontFile = VM.Instance.CustomFontFile;
+    }
 
     protected override bool OnBackButtonPressed()
     {
@@ -27,8 +36,9 @@ public partial class Settings : ContentPage
             {
                 BTDevices.SelectedItem = BT.ConnectedDevice;
             }
-        }            
+        }
     }
+
 
     private void Settings_Loaded(object? sender, EventArgs e)
     {
@@ -68,5 +78,30 @@ public partial class Settings : ContentPage
     {
         chanEditSingleton ??= new();
         Navigation.PushAsync(chanEditSingleton);
+    }
+
+    private async void FindFontButton_Clicked(object sender, EventArgs e)
+    {
+        PickOptions po = new()
+        {
+            PickerTitle = "Select Custom Font File",
+            FileTypes = customTtfFileType
+        };
+        FileResult? result = await FilePicker.Default.PickAsync(po);
+        if (result != null)
+        {
+            VM.Instance.CustomFontFile = result.FullPath;
+        }
+    }
+
+    private void ClearFontButton_Clicked(object sender, EventArgs e)
+    {
+        VM.Instance.CustomFontFile = string.Empty;
+    }
+
+    private void DisconnectButton_Clicked(object sender, EventArgs e)
+    {
+        BT.Disconnect();
+        BTDevices.SelectedIndex = -1;
     }
 }

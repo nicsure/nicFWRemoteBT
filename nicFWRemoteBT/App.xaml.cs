@@ -12,7 +12,6 @@
         protected override void OnSleep()
         {
             base.OnSleep();
-            BT.Disconnect();
         }
     }
 }

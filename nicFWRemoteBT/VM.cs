@@ -1,9 +1,11 @@
 ﻿using Plugin.BLE.Abstractions.Contracts;
+using SkiaSharp;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,8 +28,32 @@ namespace nicFWRemoteBT
         }
 
 #pragma warning disable CA1822 // Mark members as static (Intellisense is a dick head)
-        public string Version => "V1.1.1";
+        public string Version => "V1.2.0";
 #pragma warning restore CA1822 // Mark members as static
+
+        public string CustomFontFile
+        {
+            get => Prefs.Str(nameof(CustomFontFile));
+            set
+            {
+                Prefs.Str(nameof(CustomFontFile), value);
+                OnPropertyChanged(nameof(CustomFontFile));
+                var temp = CustomTypeface;
+                CustomTypeface = null;
+                using (temp) { }
+                try
+                {
+                    using FileStream stream = new(value, FileMode.Open);
+                    CustomTypeface = SKTypeface.FromStream(stream);
+                }
+                catch { }
+                OnPropertyChanged(nameof(CustomFontName));
+            }
+        }
+
+        public string CustomFontName => CustomTypeface?.FamilyName ?? "None Loaded";
+        
+        public SKTypeface? CustomTypeface { get; set; } = null;
 
         public int FontSize0
         {

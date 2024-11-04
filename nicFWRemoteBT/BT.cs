@@ -49,7 +49,7 @@ namespace nicFWRemoteBT
         public static void Disconnect() => _ = Disconnect(ConnectedDevice);
 
         public static async Task Disconnect(BTDevice? device, bool showStatus = true)
-        {
+        {            
             await SendByte(0x4b); // stop remote command
             ConnectedDevice = null;
             if(showStatus)
@@ -93,6 +93,28 @@ namespace nicFWRemoteBT
             }
         }
 
+        public static async Task EnableRemote()
+        {
+            int to = 100;
+            while (!VM.Instance.RemoteIsEnabled && to-- > 0)
+            {
+                await BT.SendByte(0x4a); // enable remote
+                using var task = Task.Delay(10);
+                await task;
+            }
+        }
+
+        public static async Task DisableRemote()
+        {
+            int to = 100;
+            while (VM.Instance.RemoteIsEnabled && to-- > 0)
+            {
+                await BT.SendByte(0x4b); // enable remote
+                using var task = Task.Delay(10);
+                await task;
+            }
+        }
+
         public static async Task Connect(BTDevice device)
         {
             await Disconnect(ConnectedDevice);
@@ -122,7 +144,7 @@ namespace nicFWRemoteBT
                                 reader.ValueUpdated -= Reader_ValueUpdated;
                                 reader.ValueUpdated += Reader_ValueUpdated;
                                 await reader.StartUpdatesAsync();
-                                await SendByte(0x4a); // start remote command
+                                await EnableRemote();
                                 return;
                             }
                         }
@@ -145,6 +167,18 @@ namespace nicFWRemoteBT
                 {
                     foreach (byte b in temp)
                     {
+                        if(DataTarget.IsIdle)
+                        {
+                            switch(b)
+                            {
+                                case 0x4a: // remote mode ACK
+                                    VM.Instance.RemoteIsEnabled = true;
+                                    continue;
+                                case 0x4b: // end remote mode ACK
+                                    VM.Instance.RemoteIsEnabled = false;
+                                    continue;
+                            }
+                        }
                         DataTarget.ProcessByte(b);
                     }
                 });

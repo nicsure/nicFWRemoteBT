@@ -16,6 +16,9 @@ public partial class ChannelEditor : ContentPage, IByteProcessor
     private bool suppressUpdate = false;
     private double offset = 0;
     public CPState State { get; set; } = CPState.Idle;
+
+    public bool IsIdle => State == CPState.Idle;
+
 	public ChannelEditor()
 	{
         BindingContext = VM.Instance;
@@ -48,14 +51,14 @@ public partial class ChannelEditor : ContentPage, IByteProcessor
 
     private async void ChannelEditor_Loaded(object? sender, EventArgs e)
     {
-        await BT.SendByte(0x4b); // disable remote
+        await BT.DisableRemote(); // disable remote
         BT.DataTarget = this;
     }
 
     protected override bool OnBackButtonPressed()
     {
         BT.DataTarget = MainPage.Display;
-        _ = BT.SendByte(0x4a); // enable remote
+        _ = BT.EnableRemote();
         _ = Navigation.PopAsync();
         return true;
     }
@@ -292,12 +295,6 @@ public partial class ChannelEditor : ContentPage, IByteProcessor
             case CPState.Idle:
                 switch(byt)
                 {
-                    case 0x4a: // remote mode ACK
-                        VM.Instance.RemoteIsEnabled = true;
-                        break;
-                    case 0x4b: // end remote mode ACK
-                        VM.Instance.RemoteIsEnabled = false;
-                        break;
                     case 0x30: // read eeprom block
                         blockCnt = 0;
                         blockCS = 0;

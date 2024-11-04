@@ -6,6 +6,7 @@ using SkiaSharp.Views.Maui.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -35,9 +36,10 @@ namespace nicFWRemoteBT
     {
         private readonly SKBitmap bitmap = new(512, 512, true);
         public static DPState State { get; set; } = DPState.Idle;
+        public bool IsIdle => State == DPState.Idle;
         private int x, y, col1, col2, width, height, font, sigMode, sigLev;
         private string text = string.Empty;
-        private readonly SKTypeface typeface = GetMonospaced("Consolas", "monospaced", "Menlo", "Courier");
+        private readonly SKTypeface defaultTypeface = GetMonospaced("monospaced", "Consolas", "Menlo", "Courier New", "Courier");
         private bool displayUpdate = false;
 
         private static readonly SKRect bmRect = new(0, 0, 512, 512);
@@ -72,7 +74,7 @@ namespace nicFWRemoteBT
                     SKFontStyleWeight.Bold,
                     SKFontStyleWidth.Expanded,
                     SKFontStyleSlant.Upright);
-                if (monospaced != null && monospaced.FamilyName.Equals(family, StringComparison.OrdinalIgnoreCase))
+                if (monospaced != null)
                     break;
             }
             return monospaced ?? SKTypeface.Default;
@@ -153,8 +155,8 @@ namespace nicFWRemoteBT
                 int fw = font == 0 ? 24 : font == 1 ? 32 : 48;
                 int fh = font < 2 ? 32 : 64;
                 var col = FwColor();
-                paint.Typeface = typeface;
-                paint.TextSize = Display.FontSize(font);
+                paint.Typeface = VM.Instance.CustomTypeface ?? defaultTypeface;
+                paint.TextSize = FontSize(font);
                 paint.TextAlign = SKTextAlign.Left;
                 paint.Style = SKPaintStyle.Fill;
                 paint.IsAntialias = true;
@@ -276,12 +278,6 @@ namespace nicFWRemoteBT
                 case DPState.Idle:
                     switch(byt)
                     {
-                        case 0x4a: // remote mode ACK
-                            VM.Instance.RemoteIsEnabled = true;
-                            break;
-                        case 0x4b: // end remote mode ACK
-                            VM.Instance.RemoteIsEnabled = false;
-                            break;
                         case 0x60: // left green led off
                             VM.Instance.LedGreenLeft = false;
                             break;
