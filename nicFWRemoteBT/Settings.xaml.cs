@@ -18,8 +18,7 @@ public partial class Settings : ContentPage
         BindingContext = VM.Instance;
         Loaded += Settings_Loaded;        
         InitializeComponent();    
-        VM.Instance.UpdateNotify += Instance_UpdateNotify;
-        VM.Instance.CustomFontFile = VM.Instance.CustomFontFile;
+        VM.Instance.UpdateNotify += Instance_UpdateNotify;        
     }
 
     protected override bool OnBackButtonPressed()

@@ -17,6 +17,7 @@ namespace nicFWRemoteBT
         static VM()
         {
             Instance = new();
+            Instance.SetCustomFont();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -28,8 +29,21 @@ namespace nicFWRemoteBT
         }
 
 #pragma warning disable CA1822 // Mark members as static (Intellisense is a dick head)
-        public string Version => "V1.2.0";
+        public string Version => "V1.2.1";
 #pragma warning restore CA1822 // Mark members as static
+
+        private void SetCustomFont()
+        {
+            var temp = CustomTypeface;
+            CustomTypeface = null;
+            using (temp) { }
+            try
+            {
+                using FileStream stream = new(CustomFontFile, FileMode.Open);
+                CustomTypeface = SKTypeface.FromStream(stream);
+            }
+            catch { }
+        }
 
         public string CustomFontFile
         {
@@ -38,15 +52,7 @@ namespace nicFWRemoteBT
             {
                 Prefs.Str(nameof(CustomFontFile), value);
                 OnPropertyChanged(nameof(CustomFontFile));
-                var temp = CustomTypeface;
-                CustomTypeface = null;
-                using (temp) { }
-                try
-                {
-                    using FileStream stream = new(value, FileMode.Open);
-                    CustomTypeface = SKTypeface.FromStream(stream);
-                }
-                catch { }
+                SetCustomFont();
                 OnPropertyChanged(nameof(CustomFontName));
             }
         }
